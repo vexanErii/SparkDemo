@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <!--   引入 echarts.js -->
+    <script src="/page/echarts.js"></script>
+    <!-- 引入 jQuery.js -->
+    <script src="/page/jquery-3.7.0.min.js"></script>
+</head>
+<body>
+<!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+<div id="main" style="width: 1000px;height:550px;"></div>
+<script type="text/javascript">
+    var chartDom = document.getElementById('main');
+    var myChart = echarts.init(chartDom);
+    var option;
+
+    $.get('http://localhost:8080/NovelUpdated', function (data) {
+        var novelTimes = data.map(function(item) {
+            return item.novelTime;
+        });
+        var novelNums = data.map(function(item) {
+            return item.novelNum;
+        });
+
+        // 配置图表选项
+        option = {
+            title: {
+                text: '小说不同月份的更新数量',
+                left: 'center'
+            },
+            xAxis: {
+                type: 'category',
+                data: novelTimes,
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    data: novelNums,
+                    type: 'line',
+                    symbol: 'triangle',
+                    symbolSize: 20,
+                    lineStyle: {
+                        color: '#5470C6',
+                        width: 4,
+                        type: 'dashed'
+                    },
+                    itemStyle: {
+                        borderWidth: 3,
+                        borderColor: '#EE6666',
+                        color: 'yellow'
+                    }
+                }
+            ]
+        };
+        // var option = {
+        //     title: {
+        //         text: '小说数量变化'
+        //     },
+        //     tooltip: {
+        //         trigger: 'axis'
+        //     },
+        //     xAxis: {
+        //         type: 'category',
+        //         data: novelTimes
+        //     },
+        //     yAxis: {
+        //         type: 'value'
+        //     },
+        //     series: [{
+        //         data: novelNums,
+        //         type: 'line'
+        //     }]
+        // };
+
+
+        if (option && typeof option === 'object') {
+            myChart.setOption(option);
+        }
+    });
+</script>
+</body>
+</html>

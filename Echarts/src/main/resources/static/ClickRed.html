@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>ECharts</title>
+<!--   引入 echarts.js -->
+  <script src="/page/echarts.js"></script>
+  <!-- 引入 jQuery.js -->
+  <script src="/page/jquery-3.7.0.min.js"></script>
+</head>
+<body>
+<!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+<div id="main" style="width: 1000px;height:550px;"></div>
+<script type="text/javascript">
+  var chartDom = document.getElementById('main');
+  var myChart = echarts.init(chartDom);
+  var option;
+
+  $.get('http://localhost:8080/CountClickRed', function (data) {
+    var novelNames = data.map(function (item) {
+      return item.novelName;
+    });
+    var novelClicks = data.map(function (item) {
+      return item.novelClick;
+    });
+    var novelRecommends = data.map(function (item) {
+      return item.novelRecommend;
+    });
+
+    // var option = {
+    //   title: {
+    //     text: '小说字数大于五百万点击量和推荐量Top',
+    //     left: 'center'
+    //   },
+    //   tooltip: {
+    //     trigger: 'axis',
+    //     axisPointer: {
+    //       type: 'shadow'
+    //     }
+    //   },
+    //   xAxis: {
+    //     type: 'category',
+    //     data: novelNames,
+    //     axisLabel: {
+    //       interval: 0
+    //     }
+    //   },
+    //   yAxis: {
+    //     type: 'value'
+    //   },
+    //   series: [{
+    //     name: '点击量',
+    //     type: 'bar',
+    //     data: novelClicks,
+    //     stack: '总量'
+    //   },
+    //     {
+    //       name: '推荐量',
+    //       type: 'bar',
+    //       data: novelRecommends,
+    //       stack: '总量'
+    //     }]
+    // };
+    option = {
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'cross',
+          crossStyle: {
+            color: '#999'
+          }
+        }
+      },
+      legend: {
+        data: ['novelName', 'novelClicks', 'novelRecommends']
+      },
+      xAxis: [
+        {
+          type: 'category',
+          data: novelNames,
+          axisPointer: {
+            type: 'shadow'
+          }
+        }
+      ],
+      yAxis: [
+        {
+          type: 'value',
+          name: 'novelClicks',
+          min: 4000,
+          max: 69000,
+          interval: 5000,
+          axisLabel: {
+            formatter: '{value} 次'
+          }
+        },
+        {
+          type: 'value',
+          name: 'novelRecommends',
+          min: 30000,
+          max: 950000,
+          interval: 100000,
+          axisLabel: {
+            formatter: '{value} 票'
+          }
+        }
+      ],
+      series: [
+        {
+          name: 'novelClicks',
+          type: 'bar',
+          tooltip: {
+            valueFormatter: function (value) {
+              return value + ' 次';
+            }
+          },
+          data: novelClicks
+        },
+        {
+          name: 'novelRecommends',
+          type: 'line',
+          yAxisIndex: 1,
+          tooltip: {
+            valueFormatter: function (value) {
+              return value + ' 票';
+            }
+          },
+          data: novelRecommends
+        }
+      ]
+    };
+
+    if (option && typeof option === 'object') {
+      myChart.setOption(option);
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小说信息数据分析</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 200px;
+            height: 100%;
+            background-color: #333;
+            color: white;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        #sidebar a {
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+        #sidebar a:hover {
+            transform: scale(1.1);
+        }
+        #content {
+            margin-left: 220px; /* Adjust based on sidebar width */
+            padding: 20px;
+        }
+        #content h1 {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="sidebar">
+    <a href="#" onclick="loadContent('ClickRed.html')">小说周点击量的TOP</a>
+    <a href="#" onclick="loadContent('NumAvg.html')">章节平均字数TOP</a>
+    <a href="#" onclick="loadContent('NumTop.html')">作家的作品数TOP</a>
+    <a href="#" onclick="loadContent('TypeClick.html')">不同类型的平均点击量</a>
+    <a href="#" onclick="loadContent('TypeNum.html')">不同种类型小说的数量</a>
+    <a href="#" onclick="loadContent('Update.html')">不同月份小说更新数</a>
+    <a href="#" onclick="loadContent('authorRead.html')">作者阅读量TOP</a>
+    <a href="#" onclick="loadContent('authorReadAve.html')">作者平均阅读量TOP</a>
+    <a href="#" onclick="loadContent('readTop.html')">小说总阅读量TOP</a>
+    <a href="#" onclick="loadContent('recommendTop.html')">小说总推荐TOP</a>
+    <a href="#" onclick="loadContent('typePro.html')">小说类型占比</a>
+    <a href="#" onclick="loadContent('typeTopRead.html')">小说各类型阅读量TOP</a>
+</div>
+
+<div id="content">
+    <h1 id="pageTitle">小说信息数据分析</h1>
+    <div class="message-image">
+        <img src="/page/message1.GIF" alt="Message 1" width="980" height="500">
+<!--        <hr style="border: 1px solid #ccc; width: 80%; margin: 20px auto;">-->
+        <img src="/page/message2.GIF" alt="Message 2" width="980" height="500">
+        <img src="/page/cleanData.GIF" alt="Message 2" width="980" height="500">
+    </div>
+
+    <iframe id="contentFrame" src="" width="100%" height="800px" frameborder="0"></iframe>
+</div>
+
+<script>
+    // function loadContent(page) {
+    //     var pageTitle = document.getElementById('pageTitle');
+    //     var contentFrame = document.getElementById('contentFrame');
+    //
+    //     // Set the page title based on the clicked link
+    //     switch(page) {
+    //         case 'ClickRed.html':
+    //             pageTitle.textContent = '点击率数据分析';
+    //             break;
+    //         case 'NumAvg.html':
+    //             pageTitle.textContent = '章节平均数据分析';
+    //             break;
+    //         case 'NumTop.html':
+    //             pageTitle.textContent = '作家排名数据分析';
+    //             break;
+    //         case 'TypeClick.html':
+    //             pageTitle.textContent = '小说类型点击率分析';
+    //             break;
+    //         case 'TypeNum.html':
+    //             pageTitle.textContent = '小说类型数量分析';
+    //             break;
+    //         case 'Update.html':
+    //             pageTitle.textContent = '小说更新频率分析';
+    //             break;
+    //         default:
+    //             pageTitle.textContent = '小说信息数据分析';
+    //     }
+    //
+    //     // Load the content from the respective page
+    //     contentFrame.src = page;
+    // }
+    function loadContent(page) {
+        var pageTitle = document.getElementById('pageTitle');
+        var contentFrame = document.getElementById('contentFrame');
+        var images = document.getElementById('content').getElementsByTagName('img');
+
+        // 隐藏所有图片
+        for (var i = 0; i < images.length; i++) {
+            images[i].style.display = 'none';
+        }
+
+        // Set the page title based on the clicked link
+            switch(page) {
+                case 'ClickRed.html':
+                    pageTitle.textContent = '点击率数据分析';
+                    break;
+                case 'NumAvg.html':
+                    pageTitle.textContent = '章节平均数据分析';
+                    break;
+                case 'NumTop.html':
+                    pageTitle.textContent = '作家排名数据分析';
+                    break;
+                case 'TypeClick.html':
+                    pageTitle.textContent = '小说类型点击率分析';
+                    break;
+                case 'TypeNum.html':
+                    pageTitle.textContent = '小说类型数量分析';
+                    break;
+                case 'Update.html':
+                    pageTitle.textContent = '小说更新频率分析';
+                    break;
+                // default:
+                //     pageTitle.textContent = '小说信息数据分析';
+                case 'authorRead.html':
+                    pageTitle.textContent = '作者总阅读量分析';
+                    break;
+                case 'authorReadAve.html':
+                    pageTitle.textContent = '作者平均阅读量分析';
+                    break;
+                case 'readTop.html':
+                    pageTitle.textContent = '小说总阅读量分析';
+                    break;
+                case 'recommendTop.html':
+                    pageTitle.textContent = '小说总推荐量分析';
+                    break;
+                case 'typePro.html':
+                    pageTitle.textContent = '小说类型分析';
+                    break;
+                case 'typeTopRead.html':
+                    pageTitle.textContent = '小说类型阅读分析';
+                    break;
+                default:
+                    pageTitle.textContent = '小说信息数据分析';
+            }
+
+        // Load the content from the respective page
+        contentFrame.src = page;
+
+        // 如果加载的是特定页面，显示图片
+        if (page === 'ClickRed.html') {
+            var messageImages = document.getElementById('content').querySelectorAll('.message-image');
+            for (var i = 0; i < messageImages.length; i++) {
+                messageImages[i].style.display = 'block';
+            }
+        }
+        // 如果需要，为其他页面添加类似的逻辑
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <!--   引入 echarts.js -->
+    <script src="/page/echarts.js"></script>
+    <!-- 引入 jQuery.js -->
+    <script src="/page/jquery-3.7.0.min.js"></script>
+</head>
+<body>
+<!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+<div id="main" style="width: 1000px;height:550px;"></div>
+<script type="text/javascript">
+    var chartDom = document.getElementById('main');
+    var myChart = echarts.init(chartDom);
+    var option;
+
+    $.get('http://localhost:8080/readTop', function (data) {
+        var novelName = data.map(function (item) {
+            return item.novelName;
+        });
+        var novelRead = data.map(function (item) {
+            return item.novelRead;
+        });
+        var novelRecommend = data.map(function (item) {
+            return item.novelRecommend;
+        });
+
+
+        var option = {
+            title: {
+                text: '小说阅读量TOP10'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                type: 'category',
+                data: novelName,
+                axisLabel: {
+                    formatter: function (value, index) {
+                        // 在这里编写自定义的格式化函数，例如只显示前几个字符并添加省略号
+                        if (value.length > 5) {
+                            return value.substring(0, 4) + '...';
+                        }
+                        return value;
+                    }
+                }
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    name:"阅读量",
+                    data: novelRead,
+                    type: 'bar'
+                },{
+                    name:"推荐量",
+                    data: novelRecommend,
+                    type: 'line'
+                }
+            ]
+        };
+
+        if (option && typeof option === 'object') {
+            myChart.setOption(option);
+        }
+    });
+</script>
+</body>
+</html>

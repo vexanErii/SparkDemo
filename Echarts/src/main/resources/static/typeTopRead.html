@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <!--   引入 echarts.js -->
+    <script src="/page/echarts.js"></script>
+    <!-- 引入 jQuery.js -->
+    <script src="/page/jquery-3.7.0.min.js"></script>
+</head>
+<body>
+<!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+<div id="main" style="width: 1000px;height:550px;"></div>
+<script type="text/javascript">
+    var chartDom = document.getElementById('main');
+    var myChart = echarts.init(chartDom);
+    var option;
+
+    $.get('http://localhost:8080/typeTopRead', function (data) {
+        var novelName = data.map(function (item) {
+            return item.novelName;
+        });
+        var novelRead = data.map(function (item) {
+            return item.novelRead;
+        });
+        var novelType = data.map(function (item) {
+            // 假设novelType的格式是"类型:子类型"
+            var parts = item.novelType.split('：'); // 使用冒号分割字符串
+            if (parts.length > 1) {
+                // 如果存在":"，则返回":"后面的部分
+                return parts[1].trim(); // 使用trim()去除可能存在的空白字符
+            } else {
+                // 如果没有":"，或者":"后面没有内容，可以返回原始值或空字符串
+                return item.novelType; // 或者 ""，取决于您的需求
+            }
+        });
+
+
+        var option = {
+            title: {
+                text: '各类型小说总阅读量TOP10',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                },
+                formatter: function (params) {
+                    // 假设 params.dataIndex 与 data 数组中的索引对应
+                    var item = data[params.dataIndex];
+                    return '小说名称: ' + item.novelName + '<br/>阅读量: ' + item.novelRead;
+                }
+            },
+            xAxis: {
+                type: 'category',
+                data: novelType,
+                axisLabel: {
+                    interval: 0
+                }
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                name: '阅读量',
+                type: 'bar',
+                data: novelRead,
+                stack: '总量',
+                label: {
+                    show: true,
+                    position: 'top', // 或 'inside', 'left', 'right', 'bottom' 等
+                    formatter: function (params) {
+                        // 假设 params.dataIndex 与 data 数组中的索引对应
+                        return data[params.dataIndex].novelName;
+                    }
+                }
+            }]
+        };
+
+        if (option && typeof option === 'object') {
+            myChart.setOption(option);
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Authors' Novels Pie Chart</title>
+  <script src="/page/echarts.js"></script>
+  <script src="/page/jquery-3.7.0.min.js"></script>
+
+</head>
+<body>
+<div style="width: 50%; margin: auto;">
+  <canvas id="authorsPieChart"></canvas>
+</div>
+<div id="main" style="width: 1000px;height:550px;margin-top: -100px"></div>
+
+<script type="text/javascript">
+  var chartDom = document.getElementById('main');
+  var myChart = echarts.init(chartDom);
+  var option;
+
+  // 使用$.get方法从服务器获取数据
+  $.get('http://localhost:8080/WriterNumTop', function (data) {
+    // 解析数据
+    // var novelAuthors = data.map(function (item) {
+    //   return item.novelAuthor;
+    // });
+    // var novelNums = data.map(function (item) {
+    //   return item.novelNum;
+    // });
+    var authorsData = data.map(function (item) {
+      return {
+        name: item.novelAuthor, // 作者名称
+        value: item.novelNum      // 小说数量
+      };
+    });
+
+    // 创建完整的ECharts配置选项
+    var option = {
+      title: {
+        text: '小说作者作品数量',
+        left: 'center'
+      },
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        orient: 'vertical',
+        left: 'left',
+        data: authorsData.map(function (author) {
+          return author.name;
+        })
+      },
+      series: [
+        {
+          name: '作品数量',
+          type: 'pie',
+          radius: '50%',
+          data: authorsData,
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }
+      ]
+    };
+    if (option && typeof option === 'object') {
+      myChart.setOption(option);
+    }
+  });
+</script>
+</body>
+</html>
